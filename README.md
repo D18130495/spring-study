@@ -93,6 +93,21 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
     </bean>
 ```
 
+- use p(property) and c(constructor) namespace
+``` java
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+        <bean id="user" class="com.shun.pojo.User" p:name="神"/>
+    
+        <bean id="user2" class="com.shun.pojo.User" c:name="里"/>
+    </beans>
+```
 ### 8. junit test template
 ``` java
     package com.shun.mapper;
