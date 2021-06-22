@@ -6,7 +6,4 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="user" class="com.shun.pojo.User" p:name="神" scope="singleton"/>
-
-    <bean id="user2" class="com.shun.pojo.User" c:name="里" scope="prototype"/>
 </beans>

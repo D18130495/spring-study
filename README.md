@@ -6,6 +6,7 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 3. Maven dependencies and another module
 4. ApplicationContext.xml
 5. DI
+6. Autowired
 
 ### 3. Maven dependencies
 ``` xml
@@ -108,7 +109,23 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
         <bean id="user2" class="com.shun.pojo.User" c:name="里"/>
     </beans>
 ```
-### 8. junit test template
+
+- singleton and prototype
+``` java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="user" class="com.shun.pojo.User" p:name="神" scope="singleton"/>
+
+    <bean id="user2" class="com.shun.pojo.User" c:name="里" scope="prototype"/>
+</beans>
+```
+### 6. Autowired
 ``` java
     package com.shun.mapper;
     
@@ -127,7 +144,6 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
         }
     }
 ```
-![An image](images/junitTest.jpg)
 
 ### 9. resources --> Mybatis-config.xml register mapper --> PojoMapper.xml
 ``` xml
