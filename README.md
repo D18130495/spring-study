@@ -5,6 +5,7 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 2. Delete src folder
 3. Maven dependencies and another module
 4. ApplicationContext.xml
+5. DI
 
 ### 3. Maven dependencies
 ``` xml
@@ -33,37 +34,63 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
     </beans>
 ```
 
-### 5. utils --> MybatisUtils.class
+### 5. DI
+- set method
 ``` java
-   package com.shun.utils;
-   
-   import org.apache.ibatis.io.Resources;
-   import org.apache.ibatis.session.SqlSession;
-   import org.apache.ibatis.session.SqlSessionFactory;
-   import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-   
-   import java.io.IOException;
-   import java.io.InputStream;
-   
-   //sqlSessionFactory --> sqlSession
-   public class MybatisUtils {
-       private static SqlSessionFactory sqlSessionFactory;
-   
-       static {
-           try {
-               String resource = "mybatis-config.xml";
-               InputStream inputStream = Resources.getResourceAsStream(resource);
-               sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-       }
-       
-       //Set to true, is autocommit
-       public static SqlSession getSqlSession() {
-           return sqlSessionFactory.openSession(true);
-       }
-   }
+    <property name="name" value="神"/>
+        <property name="address" ref="Address"/>
+        
+        <property name="books">
+            <array>
+                <value>西游记</value>
+                <value>三国</value>
+                <value>红楼梦</value>
+            </array>
+        </property>
+        
+        <property name="card">
+            <map>
+                <entry key="1" value="123"></entry>
+                <entry key="2" value="1234"></entry>
+                <entry key="3" value="12345"></entry>
+            </map>
+        </property>
+        
+        <property name="hobbies">
+            <list>
+                <value>吃饭</value>
+                <value>睡觉</value>
+                <value>打豆豆</value>
+            </list>
+        </property>
+        
+        <property name="info">
+            <props>
+                <prop key="driver"></prop>
+                <prop key="url"></prop>
+                <prop key="user">root</prop>
+                <prop key="password">123456</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="Address" class="com.shun.pojo.Address">
+        <property name="address" value="大连"/>
+    </bean>
+```
+- constructor
+``` java
+    <bean id="user" class="com.shun.pojo.User">
+        <constructor-arg name="name" value="神"/>
+    </bean>
+    
+    <bean id="user" class="com.shun.pojo.User">
+        <constructor-arg index="0" value="神"/>
+    </bean>
+    
+    <bean id="user" class="com.shun.pojo.User">
+        <constructor-arg type="java.lang.String" value="神"/>
+    </bean>
 ```
 
 ### 8. junit test template

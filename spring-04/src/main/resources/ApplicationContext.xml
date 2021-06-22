@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="student" class="com.shun.pojo.Student">
+        <property name="name" value="神"/>
+        <property name="address" ref="Address"/>
+        <property name="books">
+            <array>
+                <value>西游记</value>
+                <value>三国</value>
+                <value>红楼梦</value>
+            </array>
+        </property>
+        <property name="card">
+            <map>
+                <entry key="1" value="123"></entry>
+                <entry key="2" value="1234"></entry>
+                <entry key="3" value="12345"></entry>
+            </map>
+        </property>
+        <property name="hobbies">
+            <list>
+                <value>吃饭</value>
+                <value>睡觉</value>
+                <value>打豆豆</value>
+            </list>
+        </property>
+        <property name="info">
+            <props>
+                <prop key="driver"></prop>
+                <prop key="url"></prop>
+                <prop key="user">root</prop>
+                <prop key="password">123456</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="Address" class="com.shun.pojo.Address">
+        <property name="address" value="大连"/>
+    </bean>
+
+</beans>
