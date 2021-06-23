@@ -7,6 +7,7 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 4. ApplicationContext.xml
 5. DI
 6. Autowired
+7. Annotation-based Container Configuration
 
 ### 3. Maven dependencies
 ``` xml
@@ -37,7 +38,7 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 
 ### 5. DI
 - set method
-``` java
+``` xml
     <property name="name" value="神"/>
         <property name="address" ref="Address"/>
         
@@ -80,7 +81,7 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
     </bean>
 ```
 - constructor
-``` java
+``` xml
     <bean id="user" class="com.shun.pojo.User">
         <constructor-arg name="name" value="神"/>
     </bean>
@@ -95,7 +96,7 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 ```
 
 - use p(property) and c(constructor) namespace
-``` java
+``` xml
     <?xml version="1.0" encoding="UTF-8"?>
     <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -111,7 +112,7 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 ```
 
 - singleton and prototype
-``` java
+``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -126,35 +127,48 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 </beans>
 ```
 ### 6. Autowired
-``` java
-    package com.shun.mapper;
-    
-    import com.shun.utils.MybatisUtils;
-    import org.apache.ibatis.session.SqlSession;
-    import org.junit.Test;
-    
-    public class UserMapperTest {
-        @Test
-        public void test() {
-            SqlSession sqlSession = MybatisUtils.getSqlSession();
-    
-            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-    
-            sqlSession.close();
-        }
-    }
+- byName
+``` xml
+    <bean id="cat" class="com.shun.pojo.Cat"/>
+    <bean id="dog" class="com.shun.pojo.Dog"/>
+
+    <bean id="people" class="com.shun.pojo.People" autowire="byName">
+        <property name="name" value="八重"/>
+    </bean>
 ```
 
-### 9. resources --> Mybatis-config.xml register mapper --> PojoMapper.xml
+- byType
 ``` xml
-    //three ways
-    <mappers>
-        <mapper resource="com/shun/mapper/UserMapper.xml"/>
-        <mapper class="com.shun.mapper.UserMapper"/>
-        <package name="com.shun.mapper"/>
-    </mappers>
+    <bean class="com.shun.pojo.Cat"/>
+    <bean class="com.shun.pojo.Dog"/>
+
+    <bean id="people" class="com.shun.pojo.People" autowire="byType">
+        <property name="name" value="八重"/>
+    </bean>
 ```
-![An image](images/register.jpg)
+
+### 7. Annotation-based Container Configuration
+``` xml
+    @Autowired
+    @Qualifier("dog111")
+    private Dog dog;
+    @Autowired
+    private Cat cat;
+    
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    
+        <bean id="dog111" class="com.shun.pojo.Dog"/>
+    </beans>
+```
 
 ## 10. pom build export config
 ``` xml
