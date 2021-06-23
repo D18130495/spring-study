@@ -12,6 +12,7 @@
         <module name="spring-01-ioc" />
         <module name="spring-04" />
         <module name="spring-05-Autowired" />
+        <module name="spring-06-anno" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />

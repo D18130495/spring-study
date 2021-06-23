@@ -148,11 +148,18 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
 ```
 
 ### 7. Annotation-based Container Configuration
+1. @Autowired byType first
+2. @Resource byName first
 ``` xml
     @Autowired
-    @Qualifier("dog111")
+    @Qualifier(value = "dog111")
     private Dog dog;
     @Autowired
+    private Cat cat;
+    
+    @Resource(name = "dog111")
+    private Dog dog;
+    @Resource(name = "cat")
     private Cat cat;
     
     <?xml version="1.0" encoding="UTF-8"?>
@@ -169,6 +176,8 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
         <bean id="dog111" class="com.shun.pojo.Dog"/>
     </beans>
 ```
+
+3. 
 
 ## 10. pom build export config
 ``` xml

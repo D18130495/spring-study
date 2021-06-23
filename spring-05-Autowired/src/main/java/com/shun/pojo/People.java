@@ -3,12 +3,13 @@ package com.shun.pojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.annotation.Resource;
+
 public class People {
     private String name;
-    @Autowired
-    @Qualifier("dog111")
+    @Resource(name = "dog111")
     private Dog dog;
-    @Autowired
+    @Resource(name = "cat")
     private Cat cat;
 
     public String getName() {
