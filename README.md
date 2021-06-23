@@ -177,33 +177,33 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
     </beans>
 ```
 
-3. 
+# AOP
+### Proxy
+1. ProxyInvocationHandler
+``` java
+   package com.shun.pojo;
 
-## 10. pom build export config
-``` xml
-   <build>
-      <resources>
-         <resource>
-             <directory>src/main/resources</directory>
-             <includes>
-                 <include>**/*.properties</include>
-                 <include>**/*.xml</include>
-             </includes>
-             <filtering>true</filtering>
-         </resource>
-         <resource>
-             <directory>src/main/java</directory>
-             <includes>
-                 <include>**/*.properties</include>
-                 <include>**/*.xml</include>
-             </includes>
-             <filtering>true</filtering>
-         </resource>
-      </resources>
-   </build>
+    import java.lang.reflect.InvocationHandler;
+    import java.lang.reflect.Method;
+    import java.lang.reflect.Proxy;
+    
+    public class ProxyInvocationHandler implements InvocationHandler {
+        private Object object;
+    
+        public ProxyInvocationHandler(Object object) {
+            this.object = object;
+        }
+    
+        public Object getProxy() {
+            return Proxy.newProxyInstance(this.getClass().getClassLoader(), object.getClass().getInterfaces(), this);
+        }
+    
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            Object result = method.invoke(object, args);
+            return result;
+        }
+    }
 ```
-
-# sql function
 
 ### Use map<String, Object> to insert user
 ``` java
