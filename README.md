@@ -23,6 +23,13 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
             <artifactId>spring-webmvc</artifactId>
             <version>5.2.0.RELEASE</version>
         </dependency>
+        
+        //AOP
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.4</version>
+        </dependency>
     </dependencies>
 ```
 
@@ -203,6 +210,32 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
             return result;
         }
     }
+```
+
+### API
+``` java
+    package com.shun.log;
+    
+    import org.springframework.aop.MethodBeforeAdvice;
+    
+    import java.lang.reflect.Method;
+    
+    public class Log implements MethodBeforeAdvice {
+        public void before(Method method, Object[] objects, Object o) throws Throwable {
+            System.out.println(o.getClass().getName()+ "的" + method.getName() + "被执行了");
+        }
+    }
+```
+
+``` xml
+    <bean id="service" class="com.shun.service.ServiceImpl"/>
+    <bean id="log" class="com.shun.log.Log"/>
+
+    <aop:config>
+        <aop:pointcut id="pointcut" expression="execution(* com.shun.service.ServiceImpl.*(..))"/>
+
+        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
+    </aop:config>
 ```
 
 ### Use map<String, Object> to insert user
