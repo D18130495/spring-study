@@ -238,6 +238,43 @@ Official website: https://docs.spring.io/spring-framework/docs/current/reference
     </aop:config>
 ```
 
+### Diy aspect
+``` xml
+    <aop:config>
+        <aop:aspect ref="diyLog">
+            <aop:pointcut id="point" expression="execution(* com.shun.service.ServiceImpl.*(..))"/>
+            <aop:before method="before" pointcut-ref="point"/>
+            <aop:after method="after" pointcut-ref="point"/>
+        </aop:aspect>
+    </aop:config>
+```
+
+### Use anno
+``` xml
+    <bean id="service" class="com.shun.service.ServiceImpl"/>
+    <bean id="log" class="com.shun.log.Log"/>
+    <bean id="afterLog" class="com.shun.log.AfterLog"/>
+    <bean id="diyLog" class="com.shun.log.DiyLog"/>
+
+    <aop:aspectj-autoproxy/>
+```
+
+``` java
+    @Aspect
+public class DiyLog {
+
+    @Before("execution(* com.shun.service.ServiceImpl.*(..))")
+    public void before() {
+        System.out.println("==========Before==========");
+    }
+
+    @After("execution(* com.shun.service.ServiceImpl.*(..))")
+    public void after() {
+        System.out.println("==========After==========");
+    }
+}
+```
+
 ### Use map<String, Object> to insert user
 ``` java
     //map.class

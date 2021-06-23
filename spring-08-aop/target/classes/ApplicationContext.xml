@@ -13,14 +13,24 @@
     <bean id="service" class="com.shun.service.ServiceImpl"/>
     <bean id="log" class="com.shun.log.Log"/>
     <bean id="afterLog" class="com.shun.log.AfterLog"/>
+    <bean id="diyLog" class="com.shun.log.DiyLog"/>
 
+<!--    <aop:config>-->
+<!--        <aop:pointcut id="pointcut" expression="execution(* com.shun.service.ServiceImpl.*(..))"/>-->
+
+<!--        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>-->
+<!--        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>-->
+<!--    </aop:config>-->
+    
     <aop:config>
-        <aop:pointcut id="pointcut" expression="execution(* com.shun.service.ServiceImpl.*(..))"/>
-
-        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
-        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>
+        <aop:aspect ref="diyLog">
+            <aop:pointcut id="point" expression="execution(* com.shun.service.ServiceImpl.*(..))"/>
+            <aop:before method="before" pointcut-ref="point"/>
+            <aop:after method="after" pointcut-ref="point"/>
+        </aop:aspect>
     </aop:config>
 
+<!--    <aop:aspectj-autoproxy/>-->
 
 
 </beans>
