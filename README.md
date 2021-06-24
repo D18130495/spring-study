@@ -445,3 +445,80 @@ Create UserMapperImpl.xml
 ```
 
 # spring-mybatis transaction
+
+### spring-dao.xml
+``` xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:aop="http://www.springframework.org/schema/aop"
+           xmlns:context="http://www.springframework.org/schema/context"
+           xmlns:tx="http://www.springframework.org/schema/tx"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            https://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/aop
+            https://www.springframework.org/schema/aop/spring-aop.xsd
+             http://www.springframework.org/schema/tx
+            https://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+            <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+            <property name="username" value="root"/>
+            <property name="password" value="qpuur990415"/>
+        </bean>
+    
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="configLocation" value="mybatis-config.xml"/>
+            <property name="mapperLocations" value="com/shun/mapper/UserMapper.xml"/>
+        </bean>
+    
+        <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+            <constructor-arg index="0" ref="sqlSessionFactory"/>
+        </bean>
+    
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+    
+        <tx:advice id="txAdvice" transaction-manager="transactionManager">
+            <tx:attributes>
+                <tx:method name="*" propagation="REQUIRED"/>
+            </tx:attributes>
+        </tx:advice>
+        
+        <aop:config>
+            <aop:pointcut id="txPointCut" expression="execution(* com.shun.mapper.*.*(..))"/>
+            <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+        </aop:config>
+    </beans>
+```
+
+### Transaction
+``` java
+    public class UserMapperImpl extends SqlSessionDaoSupport implements UserMapper{
+        public List<User> selectUser() {
+    
+            User user = new User(5, "xiaowang", "qwerasdfzxc");
+    
+            UserMapper userMapper = getSqlSession().getMapper(UserMapper.class);
+    
+            userMapper.addUser(user);
+            userMapper.deleteUser(3);
+            return userMapper.selectUser();
+        }
+    
+        public int addUser(User user) {
+            UserMapper userMapper = getSqlSession().getMapper(UserMapper.class);
+            return userMapper.addUser(user);
+        }
+    
+        public int deleteUser(int id) {
+            UserMapper userMapper = getSqlSession().getMapper(UserMapper.class);
+            return userMapper.deleteUser(id);
+        }
+    }
+```
