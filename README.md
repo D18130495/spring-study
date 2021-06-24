@@ -324,3 +324,124 @@ Official website: https://mybatis.org/spring/
         </dependency>
     </dependencies>
 ```
+
+### Structure
+![An image](images/structure.jpg)
+
+### ApplicationContext.xml
+``` xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:aop="http://www.springframework.org/schema/aop"
+           xmlns:context="http://www.springframework.org/schema/context"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            https://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/aop
+            https://www.springframework.org/schema/aop/spring-aop.xsd">
+    
+        <import resource="spring-dao.xml"/>
+    
+    <!--        <bean id="userMapper" class="com.shun.mapper.UserMapperImpl">-->
+    <!--            <property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>-->
+    <!--        </bean>-->
+    
+        <bean id="userMapper2" class="com.shun.mapper.UserMapperImpl2">
+            <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        </bean>
+    </beans>
+```
+
+### spring-dao.xml
+``` xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:aop="http://www.springframework.org/schema/aop"
+           xmlns:context="http://www.springframework.org/schema/context"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans
+            https://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            https://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/aop
+            https://www.springframework.org/schema/aop/spring-aop.xsd">
+    
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+            <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+            <property name="username" value="root"/>
+            <property name="password" value="qpuur990415"/>
+        </bean>
+    
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="configLocation" value="mybatis-config.xml"/>
+            <property name="mapperLocations" value="com/shun/mapper/UserMapper.xml"/>
+        </bean>
+    
+        <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+            <constructor-arg index="0" ref="sqlSessionFactory"/>
+        </bean>
+    </beans>
+```
+
+### mybatis-config
+``` xml
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <!DOCTYPE configuration
+            PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <configuration>
+        <typeAliases>
+            <package name="com.shun.pojo"/>    
+        </typeAliases>
+    </configuration>
+```
+
+### First way
+Create UserMapperImpl.xml
+``` java
+    package com.shun.mapper;
+    
+    import com.shun.pojo.User;
+    import org.mybatis.spring.SqlSessionTemplate;
+    
+    import java.util.List;
+    
+    public class UserMapperImpl implements UserMapper{
+        private SqlSessionTemplate sqlSessionTemplate;
+    
+        public void setSqlSessionTemplate(SqlSessionTemplate sqlSessionTemplate) {
+            this.sqlSessionTemplate = sqlSessionTemplate;
+        }
+    
+        public List<User> selectUser() {
+            UserMapper userMapper = sqlSessionTemplate.getMapper(UserMapper.class);
+            return userMapper.selectUser();
+        }
+    }
+```
+
+### Second way
+Create UserMapperImpl.xml
+``` java
+    package com.shun.mapper;
+    
+    import com.shun.pojo.User;
+    import org.apache.ibatis.session.SqlSession;
+    import org.mybatis.spring.support.SqlSessionDaoSupport;
+    
+    import java.util.List;
+    
+    public class UserMapperImpl2 extends SqlSessionDaoSupport implements UserMapper {
+        public List<User> selectUser() {
+            SqlSession sqlSession = getSqlSession();
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            return userMapper.selectUser();
+        }
+    }
+```
+
+# spring-mybatis transaction

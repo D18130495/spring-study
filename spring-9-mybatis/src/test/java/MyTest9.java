@@ -1,24 +1,18 @@
 import com.shun.mapper.UserMapper;
 import com.shun.pojo.User;
-import com.shun.utils.MybatisUtils;
-import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
-
-import java.util.List;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class MyTest9 {
     @Test
     public void test9() {
-        SqlSession sqlSession = MybatisUtils.getSqlSession();
+        ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
 
-        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        UserMapper userMapper = context.getBean("userMapper2", UserMapper.class);
 
-        List<User> list = userMapper.selectUser();
-
-        for(User user : list) {
+        for(User user : userMapper.selectUser()) {
             System.out.println(user);
         }
-
-        sqlSession.close();
     }
 }
